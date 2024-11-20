@@ -1,0 +1,10 @@
+Flask==2.0.1
+Flask-SQLAlchemy==2.5.1
+Flask-Login==0.5.0
+Werkzeug
+requests
+numpy
+pandas
+scikit-learn
+tensorflow
+joblib

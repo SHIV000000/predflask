@@ -1,0 +1,149 @@
+<!-- templates/scheduled_games_players.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-4">Upcoming Games & Player Details</h1>
+
+    {% for game_detail in games %}
+    <div class="bg-white shadow-md rounded-lg mb-6 p-4">
+        <div class="flex justify-between items-center mb-4">
+            <div class="flex items-center">
+                <!-- Team Logos -->
+                {% if game_detail.home_team.team_details and game_detail.home_team.team_details.logo %}
+                <img src="{{ game_detail.home_team.team_details.logo }}" alt="{{ game_detail.home_team.name }} logo" class="h-8 w-8 mr-2">
+                {% endif %}
+                <div class="font-bold text-xl">
+                    {{ game_detail.home_team.name }} vs {{ game_detail.away_team.name }}
+                </div>
+                {% if game_detail.away_team.team_details and game_detail.away_team.team_details.logo %}
+                <img src="{{ game_detail.away_team.team_details.logo }}" alt="{{ game_detail.away_team.name }} logo" class="h-8 w-8 ml-2">
+                {% endif %}
+                <span class="ml-4 text-gray-600">
+                    {{ game_detail.game_date }}
+                </span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <!-- Home Team Section -->
+            <div>
+                <h3 class="font-semibold text-lg mb-2">
+                    {{ game_detail.home_team.name }} 
+                    {% if game_detail.home_team.team_details and game_detail.home_team.team_details.code %}
+                    <span class="text-sm text-gray-600">({{ game_detail.home_team.team_details.code }})</span>
+                    {% endif %}
+                </h3>
+                
+                <!-- Team Info -->
+                {% if game_detail.home_team.team_details %}
+                <div class="bg-gray-100 p-2 rounded mb-2">
+                    <h4 class="font-medium">Team Information</h4>
+                    <p>City: {{ game_detail.home_team.team_details.city }}</p>
+                    {% if game_detail.home_team.team_details.leagues and game_detail.home_team.team_details.leagues.standard %}
+                    <p>Conference: {{ game_detail.home_team.team_details.leagues.standard.conference }}</p>
+                    <p>Division: {{ game_detail.home_team.team_details.leagues.standard.division }}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Team Performance -->
+                {% if game_detail.home_team.recent_performance %}
+                <div class="bg-gray-100 p-2 rounded mb-2">
+                    <h4 class="font-medium">Recent Performance</h4>
+                    <p>Win Rate: {{ "%.1f"|format(game_detail.home_team.recent_performance.recent_win_pct * 100) }}%</p>
+                    <p>Average Points: {{ "%.1f"|format(game_detail.home_team.recent_performance.avg_points) }}</p>
+                    <p>Points Allowed: {{ "%.1f"|format(game_detail.home_team.recent_performance.avg_points_allowed) }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Player List -->
+                {% if game_detail.home_team.roster %}
+                <details class="bg-gray-50 p-2 rounded">
+                    <summary class="cursor-pointer">Full Roster ({{ game_detail.home_team.roster|length }} players)</summary>
+                    <ul class="mt-2">
+                        {% for player in game_detail.home_team.roster %}
+                        <li class="py-1">
+                            {{ player.firstname }} {{ player.lastname }}
+                            {% if player.leagues and player.leagues.standard %}
+                            <span class="text-gray-600">
+                                ({{ player.leagues.standard.pos|default('N/A') }})
+                                #{{ player.leagues.standard.jersey|default('N/A') }}
+                            </span>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </details>
+                {% endif %}
+            </div>
+
+            <!-- Away Team Section -->
+            <div>
+                <h3 class="font-semibold text-lg mb-2">
+                    {{ game_detail.away_team.name }}
+                    {% if game_detail.away_team.team_details and game_detail.away_team.team_details.code %}
+                    <span class="text-sm text-gray-600">({{ game_detail.away_team.team_details.code }})</span>
+                    {% endif %}
+                </h3>
+                
+                <!-- Team Info -->
+                {% if game_detail.away_team.team_details %}
+                <div class="bg-gray-100 p-2 rounded mb-2">
+                    <h4 class="font-medium">Team Information</h4>
+                    <p>City: {{ game_detail.away_team.team_details.city }}</p>
+                    {% if game_detail.away_team.team_details.leagues and game_detail.away_team.team_details.leagues.standard %}
+                    <p>Conference: {{ game_detail.away_team.team_details.leagues.standard.conference }}</p>
+                    <p>Division: {{ game_detail.away_team.team_details.leagues.standard.division }}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Team Performance -->
+                {% if game_detail.away_team.recent_performance %}
+                <div class="bg-gray-100 p-2 rounded mb-2">
+                    <h4 class="font-medium">Recent Performance</h4>
+                    <p>Win Rate: {{ "%.1f"|format(game_detail.away_team.recent_performance.recent_win_pct * 100) }}%</p>
+                    <p>Average Points: {{ "%.1f"|format(game_detail.away_team.recent_performance.avg_points) }}</p>
+                    <p>Points Allowed: {{ "%.1f"|format(game_detail.away_team.recent_performance.avg_points_allowed) }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Player List -->
+                {% if game_detail.away_team.roster %}
+                <details class="bg-gray-50 p-2 rounded">
+                    <summary class="cursor-pointer">Full Roster ({{ game_detail.away_team.roster|length }} players)</summary>
+                    <ul class="mt-2">
+                        {% for player in game_detail.away_team.roster %}
+                        <li class="py-1">
+                            {{ player.firstname }} {{ player.lastname }}
+                            {% if player.leagues and player.leagues.standard %}
+                            <span class="text-gray-600">
+                                ({{ player.leagues.standard.pos|default('N/A') }})
+                                #{{ player.leagues.standard.jersey|default('N/A') }}
+                            </span>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </details>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Prediction Section -->
+        {% set prediction = predictions.get(game_detail.game_info.id|string) %}
+        {% if prediction %}
+        <div class="mt-4 bg-blue-100 p-2 rounded">
+            <strong>Your Prediction:</strong> 
+            {{ prediction.predicted_winner }} Winner 
+            (Confidence: {{ prediction.confidence }})
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+
