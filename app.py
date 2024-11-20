@@ -945,10 +945,6 @@ def scheduled_games_players():
         return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    try:
-        init_app()
-        app.run(debug=True)
-    except Exception as e:
-        print(f"Failed to start application: {e}")
-
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
 
